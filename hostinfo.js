@@ -19,6 +19,9 @@
 ;(() => {
     const cl = console.log
 
+    // TODO(grun): Switch to http://ip-api.com/ so only one request is
+    // necessary.
+
     async function resolveIpAddressOfUrl (url) {
         const hostname = new URL(url).hostname
         const dnsLookupUrl = `https://api.exana.io/dns/${hostname}/a`
@@ -40,8 +43,6 @@
         const hostInfoLookupUrl = `https://ipinfo.io/${ipv4}/json`
         const resp = await fetch(hostInfoLookupUrl)
         const js = await resp.json()
-
-        cl(js)
 
         return {
             owner: js.org,
@@ -136,6 +137,15 @@
 
                 const $ele = document.elementFromPoint(
                     event.clientX, event.clientY)
+                if ($ele instanceof HTMLIFrameElement) {
+                    try {
+                        $ele = $ele.contentWindow.document.elementFromPoint(x, y)
+                    } catch (err) {
+                        reject('cross-origin-iframe')
+                        return
+                    }
+                }
+                
                 const position = $ele.getBoundingClientRect()
 
                 // Restore the overlay to show the progress cursor.
@@ -165,8 +175,16 @@
 
             showHostInfo(url, hostInfo)
         } catch (err) {
-            alert(err)
-            throw err
+            if (err === 'cross-origin-iframe') {
+                alert(
+                    "Clicked in a cross-origin iframe.\n"+
+                    "\n"+
+                    "Unfortunately bookmarklets can't detect elements "+
+                    "in cross-origin iframes.")
+            } else {
+                alert(err)
+                throw err
+            }
         } finally {
             $overlay.parentNode.removeChild($overlay)
         }
