@@ -81,6 +81,17 @@
         */
     }
 
+    // TODO(grun): Support <picture> elements with empty <img> tags. E.g.
+    //
+    //   <picture>
+    //     <source srcset="...">
+    //     <img>
+    //   </picture>
+    //
+    // E.g.
+    //
+    //   https://www.thetalko.com/15-scary-body-changes-every-girl-goes-through-in-their-30s/
+    //
     function extractSourceFrom ($ele) {
         let src = null
         const $imgChildren = $ele.getElementsByTagName('img')
