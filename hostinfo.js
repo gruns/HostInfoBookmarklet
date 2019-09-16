@@ -20,18 +20,38 @@
     const cl = console.log
 
     // TODO(grun): Switch to http://ip-api.com/ so only one request is
-    // necessary.
-
+    // necessary. (Though ip-api's API is, apparently, HTTP only).
     async function resolveIpAddressOfUrl (url) {
         const hostname = new URL(url).hostname
-        const dnsLookupUrl = `https://api.exana.io/dns/${hostname}/a`
+        const dnsLookupUrl = (
+            `https://dns.google.com/resolve?name=${hostname}&type=A`)
 
         const resp = await fetch(dnsLookupUrl)
         const js = await resp.json()
 
-        for (let answer of js.answer) {
-            if (answer.type === 'A') {
-                ipv4 = answer.rdata
+        // Example response:
+        //
+        //   {
+        //      ...
+        //      "Question":[  
+        //         {  
+        //            "name":"imgur.com.",
+        //            "type":1
+        //         }
+        //      ],
+        //      "Answer":[  
+        //         {  
+        //            "name":"imgur.com.",
+        //            "type":1,
+        //            "TTL":21599,
+        //            "data":"151.101.40.193"
+        //         }
+        //      ],
+        //   }
+        //
+        for (let answer of js['Answer']) {
+            if (answer.type === 1 && answer.data) {
+                ipv4 = answer.data
                 break
             }
         }
