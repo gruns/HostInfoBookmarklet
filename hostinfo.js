@@ -101,24 +101,26 @@
         */
     }
 
-    // TODO(grun): Support <picture> elements with empty <img> tags. E.g.
-    //
-    //   <picture>
-    //     <source srcset="...">
-    //     <img>
-    //   </picture>
-    //
-    // E.g.
-    //
-    //   https://www.thetalko.com/15-scary-body-changes-every-girl-goes-through-in-their-30s/
-    //
     function extractSourceFrom ($ele) {
         let src = null
+        const $parent = $ele.parentNode || null
         const $imgChildren = $ele.getElementsByTagName('img')
         const $videoChildren = $ele.getElementsByTagName('video')
-        const style = $ele.currentStyle || window.getComputedStyle($ele, false)
+        const $sourceChildren = [].slice.call(
+            $ele.getElementsByTagName('source'))
+        const $sourceSiblings = [].slice.call(
+            $ele.parentNode.getElementsByTagName('source'))
+        const $sources = $sourceChildren.concat($sourceSiblings)
 
-        if (['img', 'video'].includes($ele.tagName.toLowerCase())) {
+        if ($sources.length > 0) {
+            for (let $src of $sources) {
+                src = $src.src || $src.srcset
+                if (src) {
+                    src = src.split(' ')[0] // 'foo.jpg 480w' -> 'foo.jpg'.
+                    break
+                }
+            }
+        } else if (['img', 'video'].includes($ele.tagName.toLowerCase())) {
             src = $ele.src
         } else if ($imgChildren.length > 0) {
             src = $imgChildren[0].src
