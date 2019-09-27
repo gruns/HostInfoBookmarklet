@@ -129,7 +129,7 @@
         } else if ('backgroundImage' in style && style.backgroundImage) {
             src = style.backgroundImage.slice(4, -1).replace(/\"/g, '')
         } else {
-            for (let $child of $ele.children.length) {
+            for (let $child of $ele.children) {
                 src = extractSourceFrom($child) // Recurse.
                 if (src)
                     break
