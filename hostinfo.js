@@ -101,6 +101,13 @@
         */
     }
 
+    // TODO(grun): Support <img>, <picture>, etc sibling elements. Like on
+    //
+    //   https://www.express.com/
+    //
+    // and data-bg="url(...)" attr.
+    //
+    //   https://barmethod.com/
     function extractSourceFrom ($ele) {
         let src = null
         const $parent = $ele.parentNode || null
