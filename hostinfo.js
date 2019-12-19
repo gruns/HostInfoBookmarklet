@@ -110,6 +110,7 @@
     //   https://barmethod.com/
     function extractSourceFrom ($ele) {
         let src = null
+        const style = getComputedStyle($ele)
         const $parent = $ele.parentNode || null
         const $imgChildren = $ele.getElementsByTagName('img')
         const $videoChildren = $ele.getElementsByTagName('video')
