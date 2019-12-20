@@ -105,7 +105,7 @@
     //
     //   https://www.express.com/
     //
-    // and data-bg="url(...)" attr.
+    // and data-bg="url(...)" attr and data-bg-src="url(...)" attrs.
     //
     //   https://barmethod.com/
     function extractSourceFrom ($ele) {
